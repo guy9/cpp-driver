@@ -1,0 +1,458 @@
+
+
+
+<!doctype html>
+<html class="no-js" lang="en">
+  
+<head><!-- begin head.html -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>
+    dse.h | Scylla Docs
+    </title>
+    <meta name="description" content="Scylla is an Apache Cassandra-compatible NoSQL data store that can handle 1 million transactions per second on a single server."/>
+
+    <link rel="icon" href="../_static/img/favicon.ico" type="image/x-icon"/>
+    <link rel="canonical" href="https://docs.scylladb.com/">
+
+    <link rel="author" href="mailto:info@scylladb.com">
+    <link rel="stylesheet" href="../_static/" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_tabs/tabs.css" />
+    
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/doc/main.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+
+    <script src="../_static/js/vendor/modernizr.js"></script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T8P2JP');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Marketo -->
+    <script type="text/javascript"> (function() { var didInit = false; function initMunchkin() { if(didInit === false) { didInit = true; Munchkin.init('791-QBF-350'); } } var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//munchkin.marketo.net/munchkin.js'; s.onreadystatechange = function() { if (this.readyState == 'complete' || this.readyState == 'loaded') { initMunchkin(); } }; s.onload = initMunchkin; document.getElementsByTagName('head')[0].appendChild(s); })(); </script>
+    <!-- End Marketo -->
+
+<!-- end head.html -->
+</head>
+
+<body>
+
+
+
+<header id="header" class="animated">
+    <div class="topbar_continer contain-to-grid clearfix">
+        <nav class="top-bar" id="top-bar" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name">
+                    <div class="logo">
+                        <a href="https://docs.scylladb.com/"><img src="../_static/img/logo-scylla-docs.svg" alt="" width="151"></a>
+                    </div>
+                </li>
+                <li class="toggle-topbar"><a href="#"><span class="icon-manu"></span></a></li>
+            </ul>
+            <section class="top-bar-section clearfix">
+                <ul class="right">
+                    
+                    <li>
+                        <a href="https://cpp-driver.docs.scylladb.com/">C/C++ Driver</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://docs.scylladb.com/scylla-cloud/">Scylla Cloud</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://university.scylladb.com/">Scylla University</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://www.scylladb.com/">ScyllaDB Home</a>
+                    </li>
+                    
+                    <li class="search_continer show-for-medium-up">	
+                        <ci-search></ci-search>	
+                    </li>	
+                </ul>
+            </section>
+        </nav>
+    </div>
+</header>
+<section id="content">
+    <div class="row">
+	
+	<div class="large-6 large-push-3 columns">
+
+        
+
+        <div class="section" id="dse-h">
+<h1>dse.h<a class="headerlink" href="#dse-h" title="Permalink to this headline">¶</a></h1>
+<p>C/C++ DataStax Enterprise Driver </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Defines</p>
+<dl class="macro">
+<dt id="c.DSE_EXPORT">
+<span class="target" id="dse_8h_1ab98108e997763a414ef171d6840d14ce"></span><code class="sig-name descname">DSE_EXPORT</code><a class="headerlink" href="#c.DSE_EXPORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.DSE_VERSION_MAJOR">
+<span class="target" id="dse_8h_1a3dcc3c1eca8ed8a9293ec47771f1ce88"></span><code class="sig-name descname">DSE_VERSION_MAJOR</code><a class="headerlink" href="#c.DSE_VERSION_MAJOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.DSE_VERSION_MINOR">
+<span class="target" id="dse_8h_1a677fe03ebbec5e6fa7bfcd7e304d1556"></span><code class="sig-name descname">DSE_VERSION_MINOR</code><a class="headerlink" href="#c.DSE_VERSION_MINOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.DSE_VERSION_PATCH">
+<span class="target" id="dse_8h_1aaa7242f9a524309fc82682c5fc571a6b"></span><code class="sig-name descname">DSE_VERSION_PATCH</code><a class="headerlink" href="#c.DSE_VERSION_PATCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.DSE_VERSION_SUFFIX">
+<span class="target" id="dse_8h_1abae27edd4e14652ff7a8b27da98b2499"></span><code class="sig-name descname">DSE_VERSION_SUFFIX</code><a class="headerlink" href="#c.DSE_VERSION_SUFFIX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Typedefs</p>
+<dl class="type">
+<dt id="_CPPv413DseLineString">
+<span id="_CPPv313DseLineString"></span><span id="_CPPv213DseLineString"></span><span id="DseLineString"></span><span class="target" id="dse_8h_1a9dee451be753da5e04ac4f1822df9047"></span><em class="property">typedef </em><em class="property">struct</em> DseLineString_ <code class="sig-name descname">DseLineString</code><a class="headerlink" href="#_CPPv413DseLineString" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="type">
+<dt id="_CPPv421DseLineStringIterator">
+<span id="_CPPv321DseLineStringIterator"></span><span id="_CPPv221DseLineStringIterator"></span><span id="DseLineStringIterator"></span><span class="target" id="dse_8h_1ae07ff43d7065b5ff983f3a98eec7cd93"></span><em class="property">typedef </em><em class="property">struct</em> DseLineStringIterator_ <code class="sig-name descname">DseLineStringIterator</code><a class="headerlink" href="#_CPPv421DseLineStringIterator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="type">
+<dt id="_CPPv410DsePolygon">
+<span id="_CPPv310DsePolygon"></span><span id="_CPPv210DsePolygon"></span><span id="DsePolygon"></span><span class="target" id="dse_8h_1a4a892a02995159a1604e63ecffe7cede"></span><em class="property">typedef </em><em class="property">struct</em> DsePolygon_ <code class="sig-name descname">DsePolygon</code><a class="headerlink" href="#_CPPv410DsePolygon" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="type">
+<dt id="_CPPv418DsePolygonIterator">
+<span id="_CPPv318DsePolygonIterator"></span><span id="_CPPv218DsePolygonIterator"></span><span id="DsePolygonIterator"></span><span class="target" id="dse_8h_1a09256fd672b6609f45daabad813706f5"></span><em class="property">typedef </em><em class="property">struct</em> DsePolygonIterator_ <code class="sig-name descname">DsePolygonIterator</code><a class="headerlink" href="#_CPPv418DsePolygonIterator" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="type">
+<dt id="_CPPv434DseGssapiAuthenticatorLockCallback">
+<span id="_CPPv334DseGssapiAuthenticatorLockCallback"></span><span id="_CPPv234DseGssapiAuthenticatorLockCallback"></span><span id="DseGssapiAuthenticatorLockCallback"></span><span class="target" id="dse_8h_1ad8bbd28d3bed213f7933068c247b4f83"></span><em class="property">typedef </em>void (*<code class="sig-name descname">DseGssapiAuthenticatorLockCallback</code>)<span class="sig-paren">(</span>void *data<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv434DseGssapiAuthenticatorLockCallback" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>GSSAPI lock callback. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv436DseGssapiAuthenticatorUnlockCallback">
+<span id="_CPPv336DseGssapiAuthenticatorUnlockCallback"></span><span id="_CPPv236DseGssapiAuthenticatorUnlockCallback"></span><span id="DseGssapiAuthenticatorUnlockCallback"></span><span class="target" id="dse_8h_1aec3791ea0794f4e407ffc3f29c803d04"></span><em class="property">typedef </em>void (*<code class="sig-name descname">DseGssapiAuthenticatorUnlockCallback</code>)<span class="sig-paren">(</span>void *data<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv436DseGssapiAuthenticatorUnlockCallback" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>GSSAPI unlock callback. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Enums</p>
+<dl class="type">
+<dt id="_CPPv422DseDateRangePrecision_">
+<span id="_CPPv322DseDateRangePrecision_"></span><span id="_CPPv222DseDateRangePrecision_"></span><span id="DseDateRangePrecision_"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29"></span><em class="property">enum </em><code class="sig-name descname">DseDateRangePrecision_</code><a class="headerlink" href="#_CPPv422DseDateRangePrecision_" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="enumerator">
+<dt id="_CPPv434DSE_DATE_RANGE_PRECISION_UNBOUNDED">
+<span id="_CPPv334DSE_DATE_RANGE_PRECISION_UNBOUNDED"></span><span id="_CPPv234DSE_DATE_RANGE_PRECISION_UNBOUNDED"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29a2eb7d82d6ce66058c42b46f32b36325b"></span><code class="sig-name descname">DSE_DATE_RANGE_PRECISION_UNBOUNDED</code> = 0xFF<a class="headerlink" href="#_CPPv434DSE_DATE_RANGE_PRECISION_UNBOUNDED" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv429DSE_DATE_RANGE_PRECISION_YEAR">
+<span id="_CPPv329DSE_DATE_RANGE_PRECISION_YEAR"></span><span id="_CPPv229DSE_DATE_RANGE_PRECISION_YEAR"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29a436760612cace4ea4d69228338411f0b"></span><code class="sig-name descname">DSE_DATE_RANGE_PRECISION_YEAR</code> = 0<a class="headerlink" href="#_CPPv429DSE_DATE_RANGE_PRECISION_YEAR" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv430DSE_DATE_RANGE_PRECISION_MONTH">
+<span id="_CPPv330DSE_DATE_RANGE_PRECISION_MONTH"></span><span id="_CPPv230DSE_DATE_RANGE_PRECISION_MONTH"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29ab6d2616aa5e5111a62b82351bd8e4137"></span><code class="sig-name descname">DSE_DATE_RANGE_PRECISION_MONTH</code> = 1<a class="headerlink" href="#_CPPv430DSE_DATE_RANGE_PRECISION_MONTH" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv428DSE_DATE_RANGE_PRECISION_DAY">
+<span id="_CPPv328DSE_DATE_RANGE_PRECISION_DAY"></span><span id="_CPPv228DSE_DATE_RANGE_PRECISION_DAY"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29a24aa7f710708b41f07ae8bd6dc08c9e4"></span><code class="sig-name descname">DSE_DATE_RANGE_PRECISION_DAY</code> = 2<a class="headerlink" href="#_CPPv428DSE_DATE_RANGE_PRECISION_DAY" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv429DSE_DATE_RANGE_PRECISION_HOUR">
+<span id="_CPPv329DSE_DATE_RANGE_PRECISION_HOUR"></span><span id="_CPPv229DSE_DATE_RANGE_PRECISION_HOUR"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29a3191c73d3586179a55dec7458c0ed3d0"></span><code class="sig-name descname">DSE_DATE_RANGE_PRECISION_HOUR</code> = 3<a class="headerlink" href="#_CPPv429DSE_DATE_RANGE_PRECISION_HOUR" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv431DSE_DATE_RANGE_PRECISION_MINUTE">
+<span id="_CPPv331DSE_DATE_RANGE_PRECISION_MINUTE"></span><span id="_CPPv231DSE_DATE_RANGE_PRECISION_MINUTE"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29aa04a6686c548d4b88eb6184c6193f4fa"></span><code class="sig-name descname">DSE_DATE_RANGE_PRECISION_MINUTE</code> = 4<a class="headerlink" href="#_CPPv431DSE_DATE_RANGE_PRECISION_MINUTE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv431DSE_DATE_RANGE_PRECISION_SECOND">
+<span id="_CPPv331DSE_DATE_RANGE_PRECISION_SECOND"></span><span id="_CPPv231DSE_DATE_RANGE_PRECISION_SECOND"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29a19d83b64c614e3ca4814f1bf3fb7a666"></span><code class="sig-name descname">DSE_DATE_RANGE_PRECISION_SECOND</code> = 5<a class="headerlink" href="#_CPPv431DSE_DATE_RANGE_PRECISION_SECOND" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv436DSE_DATE_RANGE_PRECISION_MILLISECOND">
+<span id="_CPPv336DSE_DATE_RANGE_PRECISION_MILLISECOND"></span><span id="_CPPv236DSE_DATE_RANGE_PRECISION_MILLISECOND"></span><span class="target" id="dse_8h_1a7e108a195799dafacb41ba28eaf1db29a9b52a4f6922990256e8facc8f313b2e2"></span><code class="sig-name descname">DSE_DATE_RANGE_PRECISION_MILLISECOND</code> = 6<a class="headerlink" href="#_CPPv436DSE_DATE_RANGE_PRECISION_MILLISECOND" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv418dse_point_from_wktPKcP13cass_double_tP13cass_double_t">
+<span id="_CPPv318dse_point_from_wktPKcP13cass_double_tP13cass_double_t"></span><span id="_CPPv218dse_point_from_wktPKcP13cass_double_tP13cass_double_t"></span><span id="dse_point_from_wkt__cCP.cass_double_tP.cass_double_tP"></span><span class="target" id="dse_8h_1a4cee12d30aac25d53b0032f057eaffeb"></span>CassError <code class="sig-name descname">dse_point_from_wkt</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>wkt</em>, <a class="reference internal" href="cassandra.h.html#_CPPv413cass_double_t" title="cass_double_t">cass_double_t</a> *<em>x</em>, <a class="reference internal" href="cassandra.h.html#_CPPv413cass_double_t" title="cass_double_t">cass_double_t</a> *<em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418dse_point_from_wktPKcP13cass_double_tP13cass_double_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Parse the WKT representation of a point and extract the x,y coordinates.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CASS_OK if successful, otherwise error occurred </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">wkt</span></code>: WKT representation of the point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code>: </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420dse_point_from_wkt_nPKc6size_tP13cass_double_tP13cass_double_t">
+<span id="_CPPv320dse_point_from_wkt_nPKc6size_tP13cass_double_tP13cass_double_t"></span><span id="_CPPv220dse_point_from_wkt_nPKc6size_tP13cass_double_tP13cass_double_t"></span><span id="dse_point_from_wkt_n__cCP.s.cass_double_tP.cass_double_tP"></span><span class="target" id="dse_8h_1acadcaa6f2a9983f89c727e7064e22d2f"></span>CassError <code class="sig-name descname">dse_point_from_wkt_n</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>wkt</em>, size_t <em>wkt_length</em>, <a class="reference internal" href="cassandra.h.html#_CPPv413cass_double_t" title="cass_double_t">cass_double_t</a> *<em>x</em>, <a class="reference internal" href="cassandra.h.html#_CPPv413cass_double_t" title="cass_double_t">cass_double_t</a> *<em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420dse_point_from_wkt_nPKc6size_tP13cass_double_tP13cass_double_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Same as <a class="reference internal" href="#dse_8h_1a4cee12d30aac25d53b0032f057eaffeb"><span class="std std-ref">dse_point_from_wkt()</span></a>, but with lengths for string parameters.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CASS_OK if successful, otherwise error occurred </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">wkt</span></code>: WKT representation of the point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wkt_length</span></code>: length of the wkt string </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code>: </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv443dse_gssapi_authenticator_set_lock_callbacks34DseGssapiAuthenticatorLockCallback36DseGssapiAuthenticatorUnlockCallbackPv">
+<span id="_CPPv343dse_gssapi_authenticator_set_lock_callbacks34DseGssapiAuthenticatorLockCallback36DseGssapiAuthenticatorUnlockCallbackPv"></span><span id="_CPPv243dse_gssapi_authenticator_set_lock_callbacks34DseGssapiAuthenticatorLockCallback36DseGssapiAuthenticatorUnlockCallbackPv"></span><span id="dse_gssapi_authenticator_set_lock_callbacks__DseGssapiAuthenticatorLockCallback.DseGssapiAuthenticatorUnlockCallback.voidP"></span><span class="target" id="dse_8h_1a2e5b3f446ab4e386a1e5b2f06aadb889"></span>CassError <code class="sig-name descname">dse_gssapi_authenticator_set_lock_callbacks</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv434DseGssapiAuthenticatorLockCallback" title="DseGssapiAuthenticatorLockCallback">DseGssapiAuthenticatorLockCallback</a> <em>lock_callback</em>, <a class="reference internal" href="#_CPPv436DseGssapiAuthenticatorUnlockCallback" title="DseGssapiAuthenticatorUnlockCallback">DseGssapiAuthenticatorUnlockCallback</a> <em>unlock_callback</em>, void *<em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv443dse_gssapi_authenticator_set_lock_callbacks34DseGssapiAuthenticatorLockCallback36DseGssapiAuthenticatorUnlockCallbackPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set lock callbacks for GSSAPI authentication. This is used to protect Kerberos libraries that are not thread-safe.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CASS_OK if successful, otherwise an error occurred. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">lock_callback</span></code>: </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unlock_callback</span></code>: </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv418DseDateRangeBound_">
+<span id="_CPPv318DseDateRangeBound_"></span><span id="_CPPv218DseDateRangeBound_"></span><span id="DseDateRangeBound_"></span><span class="target" id="struct_dse_date_range_bound__"></span><em class="property">struct </em><code class="sig-name descname">DseDateRangeBound_</code><a class="headerlink" href="#_CPPv418DseDateRangeBound_" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;dse.h&gt;</em><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="member">
+<dt id="_CPPv4N18DseDateRangeBound_9precisionE">
+<span id="_CPPv3N18DseDateRangeBound_9precisionE"></span><span id="_CPPv2N18DseDateRangeBound_9precisionE"></span><span id="DseDateRangeBound_::precision__DseDateRangePrecision"></span><span class="target" id="struct_dse_date_range_bound___1ae4f9356dde3c0c3ba6e5ea7ae7519103"></span>DseDateRangePrecision <code class="sig-name descname">precision</code><a class="headerlink" href="#_CPPv4N18DseDateRangeBound_9precisionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N18DseDateRangeBound_7time_msE">
+<span id="_CPPv3N18DseDateRangeBound_7time_msE"></span><span id="_CPPv2N18DseDateRangeBound_7time_msE"></span><span id="DseDateRangeBound_::time_ms__cass_int64_t"></span><span class="target" id="struct_dse_date_range_bound___1a3b9f31106132a2d7c5408fb01416c209"></span><a class="reference internal" href="cassandra.h.html#_CPPv412cass_int64_t" title="cass_int64_t">cass_int64_t</a> <code class="sig-name descname">time_ms</code><a class="headerlink" href="#_CPPv4N18DseDateRangeBound_7time_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="_CPPv413DseDateRange_">
+<span id="_CPPv313DseDateRange_"></span><span id="_CPPv213DseDateRange_"></span><span id="DseDateRange_"></span><span class="target" id="struct_dse_date_range__"></span><em class="property">struct </em><code class="sig-name descname">DseDateRange_</code><a class="headerlink" href="#_CPPv413DseDateRange_" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;dse.h&gt;</em><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="member">
+<dt id="_CPPv4N13DseDateRange_14is_single_dateE">
+<span id="_CPPv3N13DseDateRange_14is_single_dateE"></span><span id="_CPPv2N13DseDateRange_14is_single_dateE"></span><span id="DseDateRange_::is_single_date__cass_bool_t"></span><span class="target" id="struct_dse_date_range___1abb7d3356a2641b1e7e9ecf3a6006280a"></span><a class="reference internal" href="cassandra.h.html#_CPPv411cass_bool_t" title="cass_bool_t">cass_bool_t</a> <code class="sig-name descname">is_single_date</code><a class="headerlink" href="#_CPPv4N13DseDateRange_14is_single_dateE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N13DseDateRange_11lower_boundE">
+<span id="_CPPv3N13DseDateRange_11lower_boundE"></span><span id="_CPPv2N13DseDateRange_11lower_boundE"></span><span id="DseDateRange_::lower_bound__DseDateRangeBound"></span><span class="target" id="struct_dse_date_range___1a657d9938a9059f741b27898928d6179d"></span>DseDateRangeBound <code class="sig-name descname">lower_bound</code><a class="headerlink" href="#_CPPv4N13DseDateRange_11lower_boundE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N13DseDateRange_11upper_boundE">
+<span id="_CPPv3N13DseDateRange_11upper_boundE"></span><span id="_CPPv2N13DseDateRange_11upper_boundE"></span><span id="DseDateRange_::upper_bound__DseDateRangeBound"></span><span class="target" id="struct_dse_date_range___1ae167c3900509a06a674b801ca4ea870c"></span>DseDateRangeBound <code class="sig-name descname">upper_bound</code><a class="headerlink" href="#_CPPv4N13DseDateRange_11upper_boundE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+        </div>
+
+        <div id="sidebar" class="large-3 large-pull-6 columns"><div class="side-nav">
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">C/C++ Driver for ScyllaDB</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cassandra.h.html">cassandra.h</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">dse.h</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../topics/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topics/dse_features/index.html">DSE Features</a></li>
+</ul>
+
+</div>
+        </div>
+
+        <div class="large-3 columns">
+            
+                <div class="versions-dropdown single-version">
+    <button class="button">
+	master
+
+	 <i class="fa fa-caret-down" aria-hidden="true"></i>
+    </button>
+    <ul class="content">
+            <li><a href="dse.h.html">master</a></li>
+    </ul>
+</div>
+            
+        </div>
+
+    </div>
+</section>
+
+<!-- newsleter modal -->
+
+<div id="newsletter_signup" class="reveal-modal tiny radius dark_modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+    <a class="close-reveal-modal" aria-label="Close">×</a>
+    <h2 id="modalTitle">Sign up for the Scylla newsletter</h2>
+    <div id="mc_embed_signup">
+        <form action="//cloudius-systems.us10.list-manage.com/subscribe/post?u=df8bb543c68230d5f7b4dcf78&amp;id=9a4589f144" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="">
+            <div id="mc_embed_signup_scroll">
+
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-EMAIL">Email</label></div>
+                        <div class="small-9 columns"><input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL"></div>
+                    </div>
+                </div>
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-FNAME">First Name </label></div>
+                        <div class="small-9 columns"><input type="text" value="" name="FNAME" class="" id="mce-FNAME"></div>
+                    </div>
+                </div>
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-LNAME">Last Name </label></div>
+                        <div class="small-9 columns"><input type="text" value="" name="LNAME" class="" id="mce-LNAME"></div>
+                    </div>
+                </div>
+                <div id="mce-responses" class="clear">
+                    <div class="response" id="mce-error-response" style="display:none"></div>
+                    <div class="response" id="mce-success-response" style="display:none"></div>
+                </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;"><input type="text" name="b_df8bb543c68230d5f7b4dcf78_9a4589f144" tabindex="-1" value=""></div>
+                <div class="clear"><input type="submit" class="button" value="Sign up" name="subscribe" id="mc-embedded-subscribe"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- end newsleter modal -->
+
+
+
+<!-- footer.html -->
+<footer id="footer">
+    <div class="footer-top">
+        <a class="logo" href="https://www.scylladb.com"><img src="../_static/img/logo-scylla-horizontal-RGB.svg" alt=""></a>
+        <div class="footer-links">
+            <a class="link" href="https://docs.scylladb.com">Docs</a>
+            <a class="link" href="https://www.scylladb.com/company/contact-us/">Contact Us</a>
+            <a class="link" href="https://www.scylladb.com/company/">About Us</a>
+            <a class="link button" href="https://github.com/scylladb/cpp-driver/issues/new?title=Issue in page dse.h&&body=I%20would%20like%20to%20report%20an%20issue%20in%20page%20https://cpp-driver.docs.scylladb.com/master/api/dse.h%0A%0A%23%23%23%20Problem%0A%0A%23%23%23%20%20Suggest%20a%20fix" target="_blank">
+                Report an issue on this page</a>
+        </div>
+        <div class="footer-actions">
+            <a class="link-icon" href="https://github.com/ScyllaDB" target="_blank">
+                <span class="icon-github2"></span></a>
+            <a class="link-icon" href="https://twitter.com/ScyllaDB" target="_blank">
+                <span class="icon-twitter"></span></a>
+            <a class="link-icon" href="https://www.linkedin.com/company/scylladb"  target="_blank">
+                <span class="icon-linkedin2"></span></a>
+            <a class="link-icon" href="https://www.facebook.com/scylladb/" target="_blank">
+                <span class="icon-facebook"></span></a>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-info">
+            <div class="footer-copyright">
+                &#169; 2021, ScyllaDB. All rights reserved.
+            </div>
+            <div class="footer-last-updated">
+                Last updated on 16 February 2021.
+            </div>
+            <div class="footer-version">
+                Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+                &amp; <a href="https://pypi.org/project/sphinx-scylladb-theme">ScyllaDB Theme 0.1.21</a>
+            </div>
+        </div>
+        <div class="footer-links">
+        </div>
+    </div>
+</footer>
+<!-- end footer.html -->
+
+<!-- bodyscripts.html -->
+<!-- at the end of the BODY --> 
+<script src="../_static/js/vendor/jquery.js"></script>
+<script src="../_static/js/vendor/jquery.cookie.min.js"></script>
+<script src="../_static/expertrec.js"></script>
+<script src="../_static/js/foundation/foundation.js"></script>
+<script src="../_static/js/foundation/foundation.topbar.js"></script>
+<script src="../_static/app.js"></script>
+<script>
+    $(document).foundation();
+</script>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8P2JP"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <!-- end bodyscripts.html -->
+</body>
+</html>

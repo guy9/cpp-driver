@@ -1,0 +1,402 @@
+
+
+
+<!doctype html>
+<html class="no-js" lang="en">
+  
+<head><!-- begin head.html -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>
+    Cassandra Cluster Manager (CCM) | Scylla Docs
+    </title>
+    <meta name="description" content="Scylla is an Apache Cassandra-compatible NoSQL data store that can handle 1 million transactions per second on a single server."/>
+
+    <link rel="icon" href="../../../_static/img/favicon.ico" type="image/x-icon"/>
+    <link rel="canonical" href="https://docs.scylladb.com/">
+
+    <link rel="author" href="mailto:info@scylladb.com">
+    <link rel="stylesheet" href="../../../_static/" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_tabs/tabs.css" />
+    
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/css/doc/main.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+
+    <script src="../../../_static/js/vendor/modernizr.js"></script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T8P2JP');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Marketo -->
+    <script type="text/javascript"> (function() { var didInit = false; function initMunchkin() { if(didInit === false) { didInit = true; Munchkin.init('791-QBF-350'); } } var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//munchkin.marketo.net/munchkin.js'; s.onreadystatechange = function() { if (this.readyState == 'complete' || this.readyState == 'loaded') { initMunchkin(); } }; s.onload = initMunchkin; document.getElementsByTagName('head')[0].appendChild(s); })(); </script>
+    <!-- End Marketo -->
+
+<!-- end head.html -->
+</head>
+
+<body>
+
+
+
+<header id="header" class="animated">
+    <div class="topbar_continer contain-to-grid clearfix">
+        <nav class="top-bar" id="top-bar" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name">
+                    <div class="logo">
+                        <a href="https://docs.scylladb.com/"><img src="../../../_static/img/logo-scylla-docs.svg" alt="" width="151"></a>
+                    </div>
+                </li>
+                <li class="toggle-topbar"><a href="#"><span class="icon-manu"></span></a></li>
+            </ul>
+            <section class="top-bar-section clearfix">
+                <ul class="right">
+                    
+                    <li>
+                        <a href="https://cpp-driver.docs.scylladb.com/">C/C++ Driver</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://docs.scylladb.com/scylla-cloud/">Scylla Cloud</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://university.scylladb.com/">Scylla University</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://www.scylladb.com/">ScyllaDB Home</a>
+                    </li>
+                    
+                    <li class="search_continer show-for-medium-up">	
+                        <ci-search></ci-search>	
+                    </li>	
+                </ul>
+            </section>
+        </nav>
+    </div>
+</header>
+<section id="content">
+    <div class="row">
+	
+	<div class="large-6 large-push-3 columns">
+
+        
+
+        <div class="section" id="cassandra-cluster-manager-ccm">
+<h1>Cassandra Cluster Manager (CCM)<a class="headerlink" href="#cassandra-cluster-manager-ccm" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/pcmanus/ccm">CCM</a> is a script/library used to assist in setup and teardown of Apache
+Cassandra on a local machine. In an effort to reduce inconsistencies and create
+a repeatable testing environment <a class="reference external" href="https://www.vagrantup.com/downloads.html">Vagrant</a> can be utilized to start and stop a
+<a class="reference external" href="https://www.virtualbox.org/wiki/Downloads">Virtual Box</a> VM for integration testing.</p>
+<div class="section" id="ccm-cluster-by-way-of-vagrant-and-virtual-box">
+<h2>CCM Cluster by way of Vagrant and Virtual Box<a class="headerlink" href="#ccm-cluster-by-way-of-vagrant-and-virtual-box" title="Permalink to this headline">¶</a></h2>
+<p>CCM Cluster is a 64-bit Ubuntu 14.04 VM. This VM comes configured with ant,
+git, maven, python, CCM, JDK v1.8 Update (Latest), and Java Cryptography
+Extension (JCE) Unlimited Strength Jurisdiction Policy Files v8</p>
+<p><strong>NOTE:</strong> The JCE is required for Secure Sockets Layer (SSL) testing.</p>
+<p>The VM contains the following specifications:</p>
+<ul class="simple">
+<li><p>4GB of RAM</p></li>
+<li><p>32MB of Video RAM</p></li>
+<li><p>4 Cores</p></li>
+<li><p>Hostname: ccm-cluster</p></li>
+<li><p>Username: vagrant</p></li>
+<li><p>Password: vagrant</p></li>
+<li><p>6 Network Interfaces Cards (NICs)</p></li>
+<li><p>Node 1: 192.168.33.11</p></li>
+<li><p>Node 2: 192.168.33.12</p></li>
+<li><p>Node 3: 192.168.33.13</p></li>
+<li><p>Node 4: 192.168.33.14</p></li>
+<li><p>Node 5: 192.168.33.15</p></li>
+<li><p>Node 6: 192.168.33.16</p></li>
+</ul>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="c1"># -*- mode: ruby -*-</span>
+<span class="c1"># vi: set ft=ruby :</span>
+
+<span class="c1"># Vagrantfile API/syntax version. Don&#39;t touch unless you know what you&#39;re doing!</span>
+<span class="no">VAGRANTFILE_API_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+
+<span class="c1"># Inline provision script</span>
+<span class="no">CCM_PROVISION_SCRIPT</span> <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="dl">EOF</span>
+<span class="sh">#!/bin/bash</span>
+
+<span class="sh">#Install package updates</span>
+<span class="sh">printf &quot;Installing System Packages ...\n&quot;</span>
+<span class="sh">#Add JDK repository and update packages</span>
+<span class="sh">add-apt-repository ppa:webupd8team/java -y &gt; /dev/null 2&gt;&amp;1</span>
+<span class="sh">apt-get update -qq</span>
+
+<span class="sh">#Auto accept the the Java license aggreement</span>
+<span class="sh">echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections</span>
+<span class="sh">echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections</span>
+
+<span class="sh">#Install the packages</span>
+<span class="sh">apt-get install ant git maven oracle-java8-installer oracle-java8-unlimited-jce-policy python-dev python-pip -qq</span>
+
+<span class="sh">#Install CCM and its dependencies</span>
+<span class="sh">printf &quot;Installing CCM and its dependencies ...\n&quot;</span>
+<span class="sh">pip install -q ccm psutil pyyaml six &gt; /dev/null 2&gt;&amp;1</span>
+<span class="dl">EOF</span>
+
+<span class="c1">##</span>
+<span class="c1"># Configure a 6 node Cassandra Cluster Manager (CCM) Virtual Machine (VM) with</span>
+<span class="c1"># the following settings:</span>
+<span class="c1">#</span>
+<span class="c1">#   - 4GB of RAM</span>
+<span class="c1">#   - 32MB of Video RAM</span>
+<span class="c1">#   - 4 cores (CPUs)</span>
+<span class="c1">#   - Hostname: ccm-cluster</span>
+<span class="c1">#   - Username: vagrant</span>
+<span class="c1">#   - Password: vagrant</span>
+<span class="c1">#   - 6 Network Interfaces Cards (NICs)</span>
+<span class="c1">#     - Node 1: 192.168.33.11</span>
+<span class="c1">#     - Node 2: 192.168.33.12</span>
+<span class="c1">#     - Node 3: 192.168.33.13</span>
+<span class="c1">#     - Node 4: 192.168.33.14</span>
+<span class="c1">#     - Node 5: 192.168.33.15</span>
+<span class="c1">#     - Node 6: 192.168.33.16</span>
+<span class="c1">##</span>
+<span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="no">VAGRANTFILE_API_VERSION</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="c1"># Create Ubuntu 14.04 LTS VM</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;ubuntu/trusty64&quot;</span>
+
+  <span class="c1"># Define the hostname and IP addresses (6 node cluster)</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">define</span> <span class="s2">&quot;ccm-cluster&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">ccm_cluster</span><span class="o">|</span>
+    <span class="n">ccm_cluster</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="s2">&quot;ccm-cluster&quot;</span>
+    <span class="n">ccm_cluster</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="s2">&quot;private_network&quot;</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.33.11&quot;</span>
+    <span class="n">ccm_cluster</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="s2">&quot;private_network&quot;</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.33.12&quot;</span>
+    <span class="n">ccm_cluster</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="s2">&quot;private_network&quot;</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.33.13&quot;</span>
+    <span class="n">ccm_cluster</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="s2">&quot;private_network&quot;</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.33.14&quot;</span>
+    <span class="n">ccm_cluster</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="s2">&quot;private_network&quot;</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.33.15&quot;</span>
+    <span class="n">ccm_cluster</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">network</span> <span class="s2">&quot;private_network&quot;</span><span class="p">,</span> <span class="ss">ip</span><span class="p">:</span> <span class="s2">&quot;192.168.33.16&quot;</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Prepare/Provision the VM</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provision</span> <span class="ss">:shell</span> <span class="k">do</span> <span class="o">|</span><span class="n">root_provision</span><span class="o">|</span>
+    <span class="n">root_provision</span><span class="o">.</span><span class="n">privileged</span> <span class="o">=</span> <span class="kp">true</span>
+    <span class="n">root_provision</span><span class="o">.</span><span class="n">inline</span> <span class="o">=</span> <span class="no">CCM_PROVISION_SCRIPT</span>
+  <span class="k">end</span>
+
+  <span class="c1"># VM parameters for the CCM cluster</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">provider</span><span class="o">|</span>
+    <span class="n">provider</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ccm-cluster&quot;</span>
+    <span class="n">provider</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyvm&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--memory&quot;</span><span class="p">,</span> <span class="s2">&quot;4096&quot;</span><span class="o">]</span>
+    <span class="n">provider</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyvm&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--vram&quot;</span><span class="p">,</span> <span class="s2">&quot;32&quot;</span><span class="o">]</span>
+    <span class="n">provider</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyvm&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--cpus&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="o">]</span>
+    <span class="n">provider</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyvm&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--natdnshostresolver1&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="o">]</span>
+    <span class="n">provider</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyvm&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--natdnsproxy1&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<div class="section" id="starting-ccm-cluster-vm">
+<h3>Starting CCM Cluster VM<a class="headerlink" href="#starting-ccm-cluster-vm" title="Permalink to this headline">¶</a></h3>
+<p>After installing <a class="reference external" href="https://www.vagrantup.com/downloads.html">Vagrant</a> and <a class="reference external" href="https://www.virtualbox.org/wiki/Downloads">Virtual Box</a>, copy the above script into a
+directory (e.g. ccm_cluster) and ensure it is named <code class="docutils literal notranslate"><span class="pre">Vagrantfile.</span></code> To start the
+CCM cluster VM run the following command in the directory with the Vagrant
+script file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant up
+</pre></div>
+</div>
+</div>
+<div class="section" id="stopping-suspending-ccm-cluster-vm">
+<h3>Stopping/Suspending CCM Cluster VM<a class="headerlink" href="#stopping-suspending-ccm-cluster-vm" title="Permalink to this headline">¶</a></h3>
+<p>To stop the CCM cluster VM run the following command in the directory with the
+Vagrant script file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant halt
+</pre></div>
+</div>
+<p>To speed up launch times of the CCM cluster VM a suspend command can be issued
+after the instance is first created by running the following command in the
+directory with the Vagrant script file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant <span class="nb">suspend</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="resuming-the-suspended-ccm-cluster-vm">
+<h3>Resuming the Suspended CCM Cluster VM<a class="headerlink" href="#resuming-the-suspended-ccm-cluster-vm" title="Permalink to this headline">¶</a></h3>
+<p>If the CCM cluster VM was suspended run the following command in the directory
+with the Vagrant script file to resume:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant resume
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+        </div>
+
+        <div id="sidebar" class="large-3 large-pull-6 columns"><div class="side-nav">
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">C/C++ Driver for ScyllaDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Features</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../basics/index.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../building/index.html">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../client_configuration/index.html">Client Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cloud/index.html">Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/index.html">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../execution_profiles/index.html">Execution Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../faq/index.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/index.html">Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scylla_specific/index.html">Scylla Specific Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Testing</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Cassandra Cluster Manager (CCM)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tracing/index.html">Tracing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../dse_features/index.html">DSE Features</a></li>
+</ul>
+
+</div>
+        </div>
+
+        <div class="large-3 columns">
+            
+                <div class="versions-dropdown single-version">
+    <button class="button">
+	master
+
+	 <i class="fa fa-caret-down" aria-hidden="true"></i>
+    </button>
+    <ul class="content">
+            <li><a href="index.html">master</a></li>
+    </ul>
+</div>
+            
+        </div>
+
+    </div>
+</section>
+
+<!-- newsleter modal -->
+
+<div id="newsletter_signup" class="reveal-modal tiny radius dark_modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+    <a class="close-reveal-modal" aria-label="Close">×</a>
+    <h2 id="modalTitle">Sign up for the Scylla newsletter</h2>
+    <div id="mc_embed_signup">
+        <form action="//cloudius-systems.us10.list-manage.com/subscribe/post?u=df8bb543c68230d5f7b4dcf78&amp;id=9a4589f144" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="">
+            <div id="mc_embed_signup_scroll">
+
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-EMAIL">Email</label></div>
+                        <div class="small-9 columns"><input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL"></div>
+                    </div>
+                </div>
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-FNAME">First Name </label></div>
+                        <div class="small-9 columns"><input type="text" value="" name="FNAME" class="" id="mce-FNAME"></div>
+                    </div>
+                </div>
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-LNAME">Last Name </label></div>
+                        <div class="small-9 columns"><input type="text" value="" name="LNAME" class="" id="mce-LNAME"></div>
+                    </div>
+                </div>
+                <div id="mce-responses" class="clear">
+                    <div class="response" id="mce-error-response" style="display:none"></div>
+                    <div class="response" id="mce-success-response" style="display:none"></div>
+                </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;"><input type="text" name="b_df8bb543c68230d5f7b4dcf78_9a4589f144" tabindex="-1" value=""></div>
+                <div class="clear"><input type="submit" class="button" value="Sign up" name="subscribe" id="mc-embedded-subscribe"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- end newsleter modal -->
+
+
+
+<!-- footer.html -->
+<footer id="footer">
+    <div class="footer-top">
+        <a class="logo" href="https://www.scylladb.com"><img src="../../../_static/img/logo-scylla-horizontal-RGB.svg" alt=""></a>
+        <div class="footer-links">
+            <a class="link" href="https://docs.scylladb.com">Docs</a>
+            <a class="link" href="https://www.scylladb.com/company/contact-us/">Contact Us</a>
+            <a class="link" href="https://www.scylladb.com/company/">About Us</a>
+            <a class="link button" href="https://github.com/scylladb/cpp-driver/issues/new?title=Issue in page Cassandra Cluster Manager (CCM)&&body=I%20would%20like%20to%20report%20an%20issue%20in%20page%20https://cpp-driver.docs.scylladb.com/master/topics/testing/ccm/index%0A%0A%23%23%23%20Problem%0A%0A%23%23%23%20%20Suggest%20a%20fix" target="_blank">
+                Report an issue on this page</a>
+        </div>
+        <div class="footer-actions">
+            <a class="link-icon" href="https://github.com/ScyllaDB" target="_blank">
+                <span class="icon-github2"></span></a>
+            <a class="link-icon" href="https://twitter.com/ScyllaDB" target="_blank">
+                <span class="icon-twitter"></span></a>
+            <a class="link-icon" href="https://www.linkedin.com/company/scylladb"  target="_blank">
+                <span class="icon-linkedin2"></span></a>
+            <a class="link-icon" href="https://www.facebook.com/scylladb/" target="_blank">
+                <span class="icon-facebook"></span></a>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-info">
+            <div class="footer-copyright">
+                &#169; 2021, ScyllaDB. All rights reserved.
+            </div>
+            <div class="footer-last-updated">
+                Last updated on 16 February 2021.
+            </div>
+            <div class="footer-version">
+                Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+                &amp; <a href="https://pypi.org/project/sphinx-scylladb-theme">ScyllaDB Theme 0.1.21</a>
+            </div>
+        </div>
+        <div class="footer-links">
+        </div>
+    </div>
+</footer>
+<!-- end footer.html -->
+
+<!-- bodyscripts.html -->
+<!-- at the end of the BODY --> 
+<script src="../../../_static/js/vendor/jquery.js"></script>
+<script src="../../../_static/js/vendor/jquery.cookie.min.js"></script>
+<script src="../../../_static/expertrec.js"></script>
+<script src="../../../_static/js/foundation/foundation.js"></script>
+<script src="../../../_static/js/foundation/foundation.topbar.js"></script>
+<script src="../../../_static/app.js"></script>
+<script>
+    $(document).foundation();
+</script>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8P2JP"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <!-- end bodyscripts.html -->
+</body>
+</html>

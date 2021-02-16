@@ -1,0 +1,531 @@
+
+
+
+<!doctype html>
+<html class="no-js" lang="en">
+  
+<head><!-- begin head.html -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>
+    SSL | Scylla Docs
+    </title>
+    <meta name="description" content="Scylla is an Apache Cassandra-compatible NoSQL data store that can handle 1 million transactions per second on a single server."/>
+
+    <link rel="icon" href="../../../_static/img/favicon.ico" type="image/x-icon"/>
+    <link rel="canonical" href="https://docs.scylladb.com/">
+
+    <link rel="author" href="mailto:info@scylladb.com">
+    <link rel="stylesheet" href="../../../_static/" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_tabs/semantic-ui-2.4.1/segment.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_tabs/semantic-ui-2.4.1/menu.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_tabs/semantic-ui-2.4.1/tab.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_tabs/tabs.css" />
+    
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/css/doc/main.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+
+    <script src="../../../_static/js/vendor/modernizr.js"></script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T8P2JP');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Marketo -->
+    <script type="text/javascript"> (function() { var didInit = false; function initMunchkin() { if(didInit === false) { didInit = true; Munchkin.init('791-QBF-350'); } } var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//munchkin.marketo.net/munchkin.js'; s.onreadystatechange = function() { if (this.readyState == 'complete' || this.readyState == 'loaded') { initMunchkin(); } }; s.onload = initMunchkin; document.getElementsByTagName('head')[0].appendChild(s); })(); </script>
+    <!-- End Marketo -->
+
+<!-- end head.html -->
+</head>
+
+<body>
+
+
+
+<header id="header" class="animated">
+    <div class="topbar_continer contain-to-grid clearfix">
+        <nav class="top-bar" id="top-bar" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name">
+                    <div class="logo">
+                        <a href="https://docs.scylladb.com/"><img src="../../../_static/img/logo-scylla-docs.svg" alt="" width="151"></a>
+                    </div>
+                </li>
+                <li class="toggle-topbar"><a href="#"><span class="icon-manu"></span></a></li>
+            </ul>
+            <section class="top-bar-section clearfix">
+                <ul class="right">
+                    
+                    <li>
+                        <a href="https://cpp-driver.docs.scylladb.com/">C/C++ Driver</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://docs.scylladb.com/scylla-cloud/">Scylla Cloud</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://university.scylladb.com/">Scylla University</a>
+                    </li>
+                    
+                    <li>
+                        <a href="https://www.scylladb.com/">ScyllaDB Home</a>
+                    </li>
+                    
+                    <li class="search_continer show-for-medium-up">	
+                        <ci-search></ci-search>	
+                    </li>	
+                </ul>
+            </section>
+        </nav>
+    </div>
+</header>
+<section id="content">
+    <div class="row">
+	
+	<div class="large-6 large-push-3 columns">
+
+        
+
+        <div class="section" id="ssl">
+<h1>SSL<a class="headerlink" href="#ssl" title="Permalink to this headline">¶</a></h1>
+<p>This is a guide to setting up SSL using the C/C++ driver. This guide will use self-signed certificates, but most steps will be similar for certificates generated by a certificate authority (CA). The first step is to generate a public and private key pair for all Cassandra nodes and configure them to use the generated certificate.</p>
+<p>Some notes on this guide:</p>
+<ul class="simple">
+<li><p>Keystore and truststore might be used interchangeably. These can and often times are the same file. This guide uses the same file for both (<code class="docutils literal notranslate"><span class="pre">keystore.jks</span></code>) The difference is that keystores generally hold private keys, and truststores hold public keys/certificate chains.</p></li>
+<li><p>Angle bracket fields (e.g. <code class="docutils literal notranslate"><span class="pre">&lt;field&gt;</span></code>) in examples need to be replaced with values specific to your environment.</p></li>
+<li><p><a class="reference external" href="https://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html">keytool</a> is an application included with Java 6+</p></li>
+</ul>
+<p>SSL can be rather cumbersome to setup; if assistance is required please use the <a class="reference external" href="https://groups.google.com/a/lists.datastax.com/forum/#%21forum/cpp-driver-user">mailing list</a>.</p>
+<div class="section" id="generating-the-cassandra-public-and-private-keys">
+<h2>Generating the Cassandra Public and Private Keys<a class="headerlink" href="#generating-the-cassandra-public-and-private-keys" title="Permalink to this headline">¶</a></h2>
+<p>The most secure method of setting up SSL is to verify that DNS or IP address used to connect to the server matches identity information found in the SSL certificate. This helps to prevent man-in-the-middle attacks. Cassandra uses IP addresses internally so those can be used directly for verification or a domain name can be used via reverse DNS (PTR record). That means that the IP address or domain name of the Cassandra server where the certficate is installed needs to be present in either the certficate’s common name (CN) or one of its subject alternative names (SANs). It’s possible to create the certficate without either, but then it will not be possible to verify the server’s identity. Although this is not as secure, it eases the deployment of SSL by allowing the same certficate to be deployed across the entire Cassandra cluster.</p>
+<p>To generate a public/private key pair with the IP address in the CN field use the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>keytool -genkeypair -noprompt -keyalg RSA -validity <span class="m">36500</span> <span class="se">\</span>
+  -alias node <span class="se">\</span>
+  -keystore keystore.jks <span class="se">\</span>
+  -storepass &lt;keystore password&gt; <span class="se">\</span>
+  -keypass &lt;key password&gt; <span class="se">\</span>
+  -dname <span class="s2">&quot;CN=&lt;IP address or domain name goes here&gt;, OU=Drivers and Tools, O=DataStax Inc., L=Santa Clara, ST=California, C=US&quot;</span>
+</pre></div>
+</div>
+<p>If SAN is preferred use this command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>keytool -genkeypair -noprompt -keyalg RSA -validity <span class="m">36500</span> <span class="se">\</span>
+  -alias node <span class="se">\</span>
+  -keystore keystore.jks <span class="se">\</span>
+  -storepass &lt;keystore password&gt; <span class="se">\</span>
+  -keypass &lt;key password&gt; <span class="se">\</span>
+  -ext <span class="nv">SAN</span><span class="o">=</span><span class="s2">&quot;&lt;IP address or domain name goes here&gt;&quot;</span> <span class="se">\</span>
+  -dname <span class="s2">&quot;CN=node1.datastax.com, OU=Drivers and Tools, O=DataStax Inc., L=Santa Clara, ST=California, C=US&quot;</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> If an IP address SAN is present then it overrides checking the CN.</p>
+</div>
+<div class="section" id="enabling-client-to-node-encryption-on-cassandra">
+<h2>Enabling <code class="docutils literal notranslate"><span class="pre">client-to-node</span></code> Encryption on Cassandra<a class="headerlink" href="#enabling-client-to-node-encryption-on-cassandra" title="Permalink to this headline">¶</a></h2>
+<p>The generated keystore from the previous step will need to be copied to all Cassandra node(s) and an update of the <code class="docutils literal notranslate"><span class="pre">cassandra.yaml</span></code> configuration file will need to be performed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>client_encryption_options:
+  enabled: <span class="nb">true</span>
+  keystore: &lt;Path to keystore&gt;/keystore.jks
+  keystore_password: &lt;keystore password&gt; <span class="c1">## The password used when generating the keystore.</span>
+  truststore: &lt;Path to keystore&gt;/keystore.jks
+  truststore_password: &lt;keystore password&gt;
+  require_client_auth: &lt;<span class="nb">true</span> or false&gt;
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> In this example keystore and truststore are identical.</p>
+<p>The following <a class="reference external" href="http://www.datastax.com/documentation/cassandra/2.1/cassandra/security/secureSSLClientToNode_t.html">guide</a> has more information related to configuring SSL on Cassandra.</p>
+</div>
+<div class="section" id="setting-up-the-c-c-driver-to-use-ssl">
+<h2>Setting up the C/C++ Driver to Use SSL<a class="headerlink" href="#setting-up-the-c-c-driver-to-use-ssl" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference external" href="http://datastax.github.io/cpp-driver/api/struct.CassSsl/"><code class="docutils literal notranslate"><span class="pre">CassSsl</span></code></a> object is required and must be configured:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cassandra.h&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">setup_ssl</span><span class="p">(</span><span class="n">CassCluster</span><span class="o">*</span> <span class="n">cluster</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">CassSsl</span><span class="o">*</span> <span class="n">ssl</span> <span class="o">=</span> <span class="n">cass_ssl_new</span><span class="p">();</span>
+
+  <span class="cm">/* Configure SSL object... */</span>
+
+  <span class="cm">/* To enable SSL attach it to the cluster object */</span>
+  <span class="n">cass_cluster_set_ssl</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">ssl</span><span class="p">);</span>
+
+  <span class="cm">/* You can detach your reference to this object once it&#39;s</span>
+<span class="cm">   * added to the cluster object</span>
+<span class="cm">   */</span>
+  <span class="n">cass_ssl_free</span><span class="p">(</span><span class="n">ssl</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="enable-ssl-without-initializing-the-underlying-library-e-g-openssl">
+<h3>Enable SSL without initializing the underlying library (e.g. OpenSSL)<a class="headerlink" href="#enable-ssl-without-initializing-the-underlying-library-e-g-openssl" title="Permalink to this headline">¶</a></h3>
+<p>This is useful for integrating with applications that have already initialized
+the underlying SSL library.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cassandra.h&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">setup_ssl_no_lib_init</span><span class="p">(</span><span class="n">CassCluster</span><span class="o">*</span> <span class="n">cluster</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/* The underlying SSL implemenation should be initialized */</span>
+
+  <span class="cm">/* Enable SSL */</span>
+  <span class="n">CassSsl</span><span class="o">*</span> <span class="n">ssl</span> <span class="o">=</span> <span class="n">cass_ssl_new_no_lib_init</span><span class="p">();</span> <span class="cm">/* Don&#39;t reinitialize the library */</span>
+
+  <span class="cm">/* Configure SSL object... */</span>
+
+  <span class="cm">/* To enable SSL attach it to the cluster object */</span>
+  <span class="n">cass_cluster_set_ssl</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">ssl</span><span class="p">);</span>
+
+  <span class="cm">/* You can detach your reference to this object once it&#39;s</span>
+<span class="cm">   * added to the cluster object</span>
+<span class="cm">   */</span>
+  <span class="n">cass_ssl_free</span><span class="p">(</span><span class="n">ssl</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="exporting-and-loading-the-cassandra-public-key">
+<h4>Exporting and Loading the Cassandra Public Key<a class="headerlink" href="#exporting-and-loading-the-cassandra-public-key" title="Permalink to this headline">¶</a></h4>
+<p>The default setting of the driver is to verify the certificate sent during the SSL handshake. For the driver to properly verify the Cassandra certificate the driver needs either the public key from the self-signed public key or the CA certificate chain used to sign the public key. To have this work, extract the public key from the Cassandra keystore generated in the previous steps. This exports a <a class="reference external" href="https://en.wikipedia.org/wiki/Privacy-enhanced_Electronic_Mail">PEM formatted</a> certificate which is required by the C/C++ driver.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>keytool -exportcert -rfc -noprompt <span class="se">\</span>
+  -alias node <span class="se">\</span>
+  -keystore keystore.jks <span class="se">\</span>
+  -storepass &lt;keystore password&gt; <span class="se">\</span>
+  -file cassandra.pem
+</pre></div>
+</div>
+<p>The trusted certificate can then be loaded using the following code:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">load_trusted_cert_file</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="n">CassSsl</span><span class="o">*</span> <span class="n">ssl</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">CassError</span> <span class="n">rc</span><span class="p">;</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">cert</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">cert_size</span><span class="p">;</span>
+
+  <span class="kt">FILE</span> <span class="o">*</span><span class="n">in</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s">&quot;rb&quot;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">in</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;Error loading certificate file &#39;%s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">fseek</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_END</span><span class="p">);</span>
+  <span class="n">cert_size</span> <span class="o">=</span> <span class="n">ftell</span><span class="p">(</span><span class="n">in</span><span class="p">);</span>
+  <span class="n">rewind</span><span class="p">(</span><span class="n">in</span><span class="p">);</span>
+
+  <span class="n">cert</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">cert_size</span><span class="p">);</span>
+  <span class="n">fread</span><span class="p">(</span><span class="n">cert</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">),</span> <span class="n">cert_size</span><span class="p">,</span> <span class="n">in</span><span class="p">);</span>
+  <span class="n">fclose</span><span class="p">(</span><span class="n">in</span><span class="p">);</span>
+
+  <span class="c1">// Add the trusted certificate (or chain) to the driver</span>
+  <span class="n">rc</span> <span class="o">=</span> <span class="n">cass_ssl_add_trusted_cert_n</span><span class="p">(</span><span class="n">ssl</span><span class="p">,</span> <span class="n">cert</span><span class="p">,</span> <span class="n">cert_size</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="n">CASS_OK</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;Error loading SSL certificate: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">cass_error_desc</span><span class="p">(</span><span class="n">rc</span><span class="p">));</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">cert</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">free</span><span class="p">(</span><span class="n">cert</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It is possible to load multiple self-signed certificates or CA certificate chains. This will be required in cases when self-signed certificates with unique IP addresses are being used. It is possible to disable the certificate verification process, but it is not recommended.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">CassSsl</span><span class="o">*</span> <span class="n">ssl</span> <span class="o">=</span> <span class="n">cass_ssl_new</span><span class="p">();</span>
+
+<span class="c1">// Disable certifcate verifcation</span>
+<span class="n">cass_ssl_set_verify_flags</span><span class="p">(</span><span class="n">ssl</span><span class="p">,</span> <span class="n">CASS_SSL_VERIFY_NONE</span><span class="p">);</span>
+
+<span class="cm">/* ... */</span>
+
+<span class="n">cass_ssl_free</span><span class="p">(</span><span class="n">ssl</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="enabling-cassandra-identity-verification">
+<h4>Enabling Cassandra identity verification<a class="headerlink" href="#enabling-cassandra-identity-verification" title="Permalink to this headline">¶</a></h4>
+<p>If a unique certificate has been generated for each Cassandra node with the IP address or domain name in the CN or SAN fields, you also need to enable identity verification.</p>
+<p><strong>NOTE:</strong> This is disabled by default.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">CassSsl</span><span class="o">*</span> <span class="n">ssl</span> <span class="o">=</span> <span class="n">cass_ssl_new</span><span class="p">();</span>
+
+<span class="c1">// Add identity verification flag: CASS_SSL_VERIFY_PEER_IDENTITY (IP address)</span>
+<span class="n">cass_ssl_set_verify_flags</span><span class="p">(</span><span class="n">ssl</span><span class="p">,</span> <span class="n">CASS_SSL_VERIFY_PEER_CERT</span> <span class="o">|</span> <span class="n">CASS_SSL_VERIFY_PEER_IDENTITY</span><span class="p">);</span>
+
+<span class="c1">// Or use: CASS_SSL_VERIFY_PEER_IDENTITY_DNS (domain name)</span>
+<span class="n">cass_ssl_set_verify_flags</span><span class="p">(</span><span class="n">ssl</span><span class="p">,</span> <span class="n">CASS_SSL_VERIFY_PEER_CERT</span> <span class="o">|</span> <span class="n">CASS_SSL_VERIFY_PEER_IDENTITY_DNS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If using a domain name to verify the peer’s identity then hostname resolution
+(reverse DNS) needs to be enabled:</p>
+<p><strong>NOTE:</strong> This is also disabled by default.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">CassCluster</span><span class="o">*</span> <span class="n">cluster</span> <span class="o">=</span> <span class="n">cass_cluster_new</span><span class="p">();</span>
+
+<span class="c1">// Enable reverse DNS</span>
+<span class="n">cass_cluster_set_use_hostname_resolution</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">cass_true</span><span class="p">);</span>
+
+<span class="cm">/* ... */</span>
+
+<span class="n">cass_cluster_free</span><span class="p">(</span><span class="n">cluster</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-cassandra-and-the-c-c-driver-with-client-side-certificates">
+<h3>Using Cassandra and the C/C++ driver with client-side certificates<a class="headerlink" href="#using-cassandra-and-the-c-c-driver-with-client-side-certificates" title="Permalink to this headline">¶</a></h3>
+<p>Client-side certificates allow Cassandra to authenticate the client using public key cryptography and chains of trust. This is same process as above but in reverse. The client has a public and private key and the Cassandra node has a copy of the private key or the CA chain used to generate the pair.</p>
+<div class="section" id="generating-and-loading-the-client-side-certificate">
+<h4>Generating and loading the client-side certificate<a class="headerlink" href="#generating-and-loading-the-client-side-certificate" title="Permalink to this headline">¶</a></h4>
+<p>A new public/private key pair needs to be generated for client authentication.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>keytool -genkeypair -noprompt -keyalg RSA -validity <span class="m">36500</span> <span class="se">\</span>
+  -alias driver <span class="se">\</span>
+  -keystore keystore-driver.jks <span class="se">\</span>
+  -storepass &lt;keystore password&gt; <span class="se">\</span>
+  -keypass &lt;key password&gt;
+</pre></div>
+</div>
+<p>The public and private key then need to be extracted and converted to the PEM format.</p>
+<p>To extract the public:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>keytool -exportcert -rfc -noprompt <span class="se">\</span>
+  -alias driver <span class="se">\</span>
+  -keystore keystore-driver.jks <span class="se">\</span>
+  -storepass &lt;keystore password&gt; <span class="se">\</span>
+  -file driver.pem
+</pre></div>
+</div>
+<p>To extract and convert the private key:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>keytool -importkeystore -noprompt -srcalias certificatekey -deststoretype PKCS12 <span class="se">\</span>
+  -srcalias driver <span class="se">\</span>
+  -srckeystore keystore-driver.jks <span class="se">\</span>
+  -srcstorepass &lt;keystore password&gt; <span class="se">\</span>
+  -storepass &lt;key password&gt; <span class="se">\</span>
+  -destkeystore keystore-driver.p12
+
+openssl pkcs12 -nomacver -nocerts <span class="se">\</span>
+  -in keystore-driver.p12 <span class="se">\</span>
+  -password pass:&lt;key password&gt; <span class="se">\</span>
+  -passout pass:&lt;key password&gt; <span class="se">\</span>
+  -out driver-private.pem
+</pre></div>
+</div>
+<p>Now PEM formatted public and private key can be loaded. These files can be loaded using the same code from above in load_trusted_cert_file().</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">CassError</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">CASS_OK</span><span class="p">;</span>
+<span class="n">CassSsl</span><span class="o">*</span> <span class="n">ssl</span> <span class="o">=</span> <span class="n">cass_ssl_new</span><span class="p">();</span>
+
+<span class="kt">char</span><span class="o">*</span> <span class="n">cert</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="kt">size_t</span> <span class="n">cert_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// Load PEM-formatted certificate data and size into cert and cert_size...</span>
+
+<span class="n">rc</span> <span class="o">=</span> <span class="n">cass_ssl_set_cert_n</span><span class="p">(</span><span class="n">ssl</span><span class="p">,</span> <span class="n">cert</span><span class="p">,</span> <span class="n">cert_size</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="n">CASS_OK</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Handle error</span>
+<span class="p">}</span>
+
+<span class="kt">char</span><span class="o">*</span> <span class="n">key</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="kt">size_t</span> <span class="n">key_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// A password is required when the private key is encrypted. If the private key</span>
+<span class="c1">// is NOT password protected use NULL.</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">key_password</span> <span class="o">=</span> <span class="s">&quot;&lt;key password&gt;&quot;</span><span class="p">;</span>
+
+<span class="c1">// Load PEM-formatted private key data and size into key and key_size...</span>
+
+<span class="n">rc</span> <span class="o">=</span> <span class="n">cass_ssl_set_private_key_n</span><span class="p">(</span><span class="n">ssl</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">key_size</span><span class="p">,</span> <span class="n">key_password</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">key_password</span><span class="p">));</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="n">CASS_OK</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Handle error</span>
+<span class="p">}</span>
+
+<span class="n">cass_ssl_free</span><span class="p">(</span><span class="n">ssl</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-up-client-authentication-with-cassandra">
+<h4>Setting up client authentication with Cassandra<a class="headerlink" href="#setting-up-client-authentication-with-cassandra" title="Permalink to this headline">¶</a></h4>
+<p>The driver’s public key or the CA chain used to sign the driver’s certificate will need to be added to Cassandra’s truststore. If using self-signed certificate then the public key will need to be extracted from the driver’s keystore generated in the previous steps.</p>
+<p>Extract the public key from the driver’s keystore and add it to Cassandra’s truststore.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>keytool -exportcert -noprompt <span class="se">\</span>
+  -alias driver <span class="se">\</span>
+  -keystore keystore-driver.jks <span class="se">\</span>
+  -storepass cassandra <span class="se">\</span>
+  -file cassandra-driver.crt
+
+keytool -import -noprompt <span class="se">\</span>
+  -alias truststore <span class="se">\</span>
+  -keystore keystore.jks <span class="se">\</span>
+  -storepass cassandra <span class="se">\</span>
+  -file cassandra-driver.crt
+</pre></div>
+</div>
+<p>You also need to enable client authentication in <code class="docutils literal notranslate"><span class="pre">cassandra.yaml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">require_client_auth</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+        </div>
+
+        <div id="sidebar" class="large-3 large-pull-6 columns"><div class="side-nav">
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">C/C++ Driver for ScyllaDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Features</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../basics/index.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../building/index.html">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../client_configuration/index.html">Client Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cloud/index.html">Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/index.html">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../execution_profiles/index.html">Execution Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../faq/index.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/index.html">Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scylla_specific/index.html">Scylla Specific Features</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Security</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SSL</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../testing/index.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tracing/index.html">Tracing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../dse_features/index.html">DSE Features</a></li>
+</ul>
+
+</div>
+        </div>
+
+        <div class="large-3 columns">
+            
+                <div class="versions-dropdown single-version">
+    <button class="button">
+	master
+
+	 <i class="fa fa-caret-down" aria-hidden="true"></i>
+    </button>
+    <ul class="content">
+            <li><a href="index.html">master</a></li>
+    </ul>
+</div>
+            
+        </div>
+
+    </div>
+</section>
+
+<!-- newsleter modal -->
+
+<div id="newsletter_signup" class="reveal-modal tiny radius dark_modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+    <a class="close-reveal-modal" aria-label="Close">×</a>
+    <h2 id="modalTitle">Sign up for the Scylla newsletter</h2>
+    <div id="mc_embed_signup">
+        <form action="//cloudius-systems.us10.list-manage.com/subscribe/post?u=df8bb543c68230d5f7b4dcf78&amp;id=9a4589f144" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="">
+            <div id="mc_embed_signup_scroll">
+
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-EMAIL">Email</label></div>
+                        <div class="small-9 columns"><input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL"></div>
+                    </div>
+                </div>
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-FNAME">First Name </label></div>
+                        <div class="small-9 columns"><input type="text" value="" name="FNAME" class="" id="mce-FNAME"></div>
+                    </div>
+                </div>
+                <div class="mc-field-group">
+                    <div class="row collapse">
+                        <div class="small-3 columns"><label for="mce-LNAME">Last Name </label></div>
+                        <div class="small-9 columns"><input type="text" value="" name="LNAME" class="" id="mce-LNAME"></div>
+                    </div>
+                </div>
+                <div id="mce-responses" class="clear">
+                    <div class="response" id="mce-error-response" style="display:none"></div>
+                    <div class="response" id="mce-success-response" style="display:none"></div>
+                </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;"><input type="text" name="b_df8bb543c68230d5f7b4dcf78_9a4589f144" tabindex="-1" value=""></div>
+                <div class="clear"><input type="submit" class="button" value="Sign up" name="subscribe" id="mc-embedded-subscribe"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- end newsleter modal -->
+
+
+
+<!-- footer.html -->
+<footer id="footer">
+    <div class="footer-top">
+        <a class="logo" href="https://www.scylladb.com"><img src="../../../_static/img/logo-scylla-horizontal-RGB.svg" alt=""></a>
+        <div class="footer-links">
+            <a class="link" href="https://docs.scylladb.com">Docs</a>
+            <a class="link" href="https://www.scylladb.com/company/contact-us/">Contact Us</a>
+            <a class="link" href="https://www.scylladb.com/company/">About Us</a>
+            <a class="link button" href="https://github.com/scylladb/cpp-driver/issues/new?title=Issue in page SSL&&body=I%20would%20like%20to%20report%20an%20issue%20in%20page%20https://cpp-driver.docs.scylladb.com/master/topics/security/ssl/index%0A%0A%23%23%23%20Problem%0A%0A%23%23%23%20%20Suggest%20a%20fix" target="_blank">
+                Report an issue on this page</a>
+        </div>
+        <div class="footer-actions">
+            <a class="link-icon" href="https://github.com/ScyllaDB" target="_blank">
+                <span class="icon-github2"></span></a>
+            <a class="link-icon" href="https://twitter.com/ScyllaDB" target="_blank">
+                <span class="icon-twitter"></span></a>
+            <a class="link-icon" href="https://www.linkedin.com/company/scylladb"  target="_blank">
+                <span class="icon-linkedin2"></span></a>
+            <a class="link-icon" href="https://www.facebook.com/scylladb/" target="_blank">
+                <span class="icon-facebook"></span></a>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-info">
+            <div class="footer-copyright">
+                &#169; 2021, ScyllaDB. All rights reserved.
+            </div>
+            <div class="footer-last-updated">
+                Last updated on 16 February 2021.
+            </div>
+            <div class="footer-version">
+                Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+                &amp; <a href="https://pypi.org/project/sphinx-scylladb-theme">ScyllaDB Theme 0.1.21</a>
+            </div>
+        </div>
+        <div class="footer-links">
+        </div>
+    </div>
+</footer>
+<!-- end footer.html -->
+
+<!-- bodyscripts.html -->
+<!-- at the end of the BODY --> 
+<script src="../../../_static/js/vendor/jquery.js"></script>
+<script src="../../../_static/js/vendor/jquery.cookie.min.js"></script>
+<script src="../../../_static/expertrec.js"></script>
+<script src="../../../_static/js/foundation/foundation.js"></script>
+<script src="../../../_static/js/foundation/foundation.topbar.js"></script>
+<script src="../../../_static/app.js"></script>
+<script>
+    $(document).foundation();
+</script>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8P2JP"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <!-- end bodyscripts.html -->
+</body>
+</html>
